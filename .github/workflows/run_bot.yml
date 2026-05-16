@@ -2,19 +2,18 @@ name: Daily Video Bot
 
 on:
   schedule:
-    # Runs 5 times a day
     - cron: '0 6,10,14,18,22 * * *' 
-  workflow_dispatch: # Allows us to test it manually!
+  workflow_dispatch: 
 
 jobs:
   create-video:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
@@ -30,7 +29,7 @@ jobs:
         run: python bot.py
 
       - name: Save Final Video
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: final-video
           path: output.mp4
