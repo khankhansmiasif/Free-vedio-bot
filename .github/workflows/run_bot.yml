@@ -1,0 +1,36 @@
+name: Daily Video Bot
+
+on:
+  schedule:
+    # Runs 5 times a day
+    - cron: '0 6,10,14,18,22 * * *' 
+  workflow_dispatch: # Allows us to test it manually!
+
+jobs:
+  create-video:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Video Editor (FFmpeg)
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Install Python Libraries
+        run: pip install google-generativeai edge-tts
+
+      - name: Run Bot Code
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python bot.py
+
+      - name: Save Final Video
+        uses: actions/upload-artifact@v3
+        with:
+          name: final-video
+          path: output.mp4
