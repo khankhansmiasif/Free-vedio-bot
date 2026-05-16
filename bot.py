@@ -4,8 +4,11 @@ import google.generativeai as genai
 import edge_tts
 import subprocess
 
-# 1. Setup Gemini AI to write the script
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+# 1. Setup Gemini AI directly with your key
+# PASTE YOUR ACTUAL API KEY INSIDE THE QUOTES BELOW:
+API_KEY = "AIzaSyBbPQSK2cre-seslNxhrRw7Wf973C7hIWo"
+
+genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash') 
 response = model.generate_content("Write a 30-second fascinating and bizarre historical fact for a Facebook Reel. Do not include any stage directions or visual cues, just the spoken text.")
 script_text = response.text.replace('*', '')
@@ -32,4 +35,3 @@ subprocess.run([
     '-shortest', 'output.mp4'
 ])
 print("Video created successfully!")
-
