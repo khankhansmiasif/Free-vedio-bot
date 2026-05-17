@@ -4,13 +4,9 @@ import google.generativeai as genai
 import edge_tts
 import subprocess
 
-# Put your exact API key right between these quotes
+# 1. Setup Gemini AI 
 MY_KEY = "AIzaSyBbPQSK2cre-seslNxhrRw7Wf973C7hIWo"
-
-# We configure the key directly using a clean method
 genai.configure(api_key=MY_KEY)
-
-# Use 'gemini-pro' since it matches this specific package version
 model = genai.GenerativeModel('gemini-pro') 
 
 try:
@@ -36,7 +32,7 @@ if not mp4_files:
     exit(1)
 bg_video = mp4_files[0] 
 
-# 4. Stitch the Audio and Video together using FFmpeg
+# 4. Stitch the Audio and Video together
 print(f"Stitching video together using background: {bg_video}")
 subprocess.run([
     'ffmpeg', '-y', '-stream_loop', '-1', '-i', bg_video, '-i', 'voice.mp3',
@@ -44,3 +40,11 @@ subprocess.run([
     '-shortest', 'output.mp4'
 ])
 print("Video created successfully!")
+
+# 5. Send to Make.com Webhook
+print("Sending video to Make.com...")
+webhook_url = "https://hook.eu1.make.com/kma64x1ii67j1zldp47fe9bmcdtnd67b"
+subprocess.run([
+    'curl', '-X', 'POST', '-F', 'file=@output.mp4', webhook_url
+])
+print("Sent to Make!")
